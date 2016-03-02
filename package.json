@@ -1,0 +1,21 @@
+{
+  "name": "say",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "dependencies": {
+    "express": "^4.13.4",
+    "gm": "^1.21.1",
+    "pn": "^1.0.0",
+    "svg-to-png": "^2.0.1",
+    "svg2png": "^2.1.0",
+    "svgexport": "^0.3.0",
+    "wordwrap": "^1.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
