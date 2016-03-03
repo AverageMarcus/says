@@ -3,6 +3,7 @@ var exphbs  = require('express-handlebars');
 var fs = require('fs');
 var svgexport = require('svgexport');
 var wrap = require('wordwrap')(30);
+var Imagemin = require('imagemin');
 
 var port = process.env.PORT || 3000;
 
@@ -82,7 +83,13 @@ function generateImage(timestamp, person, text, done) {
       'output' : `${timestamp}.png`
     }, function(err) {
 
-      done(err);
+      new Imagemin()
+        .src(`${timestamp}.png`)
+        .dest(`./`)
+        .use(Imagemin.optipng({optimizationLevel: 3}))
+        .run((err, files) => {
+          done(err);
+        });
     });
 }
 
