@@ -3,8 +3,10 @@
 <div>
   {{#each people}}
     <div style="display:inline-block">
-      <h2>{{@key}}</h2>
-      <img src="{{this.file}}" />
+      <a href="/{{@key}}/Example">
+        <h2>{{@key}}</h2>
+        <img src="{{this.file}}" />
+      </a>
     </div>
   {{/each}}
 </div>
