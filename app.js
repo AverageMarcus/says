@@ -86,7 +86,7 @@ function generateImage(timestamp, person, text, done) {
       new Imagemin()
         .src(`${timestamp}.png`)
         .dest(`./`)
-        .use(Imagemin.optipng({optimizationLevel: 3}))
+        .use(Imagemin.optipng({optimizationLevel: 1}))
         .run((err, files) => {
           done(err);
         });
