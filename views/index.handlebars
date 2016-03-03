@@ -1,0 +1,10 @@
+<h1>Available People</h1>
+
+<div>
+  {{#each people}}
+    <div style="display:inline-block">
+      <h2>{{@key}}</h2>
+      <img src="{{this.file}}" />
+    </div>
+  {{/each}}
+</div>
