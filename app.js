@@ -11,7 +11,8 @@ var people = {
     'file': 'ben.png',
     'x': 340,
     'y': 80,
-    'fontSize': 25
+    'fontSize': 25,
+    'rotation': 0
   }
 }
 
@@ -31,7 +32,7 @@ function generateImage(timestamp, person, text, done) {
         </pattern>
       </defs>
       <path d="M0 0 H 743 V 418 H 0 L 0 0" fill="url(#img1)"/>
-      <text x="${people[person].x}" y="${people[person].y}" font-family="Arial" font-size="${people[person].fontSize}">
+      <text x="${people[person].x}" y="${people[person].y}" transform="rotate(${people[person].rotation} ${people[person].x} ${people[person].y})" font-family="Arial" font-size="${people[person].fontSize}">
           ${formattedText}
       </text>
     </svg>`;
