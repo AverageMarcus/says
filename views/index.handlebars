@@ -7,6 +7,18 @@
         <h2>{{@key}}</h2>
         <img src="{{this.file}}" />
       </a>
+      <input type="text" style="display:block; width: 90%; margin: 0 auto;" data-person="{{@key}}" placeholder="Message:" />
     </div>
   {{/each}}
 </div>
+
+<script>
+  var messageBoxes = document.querySelectorAll('input[data-person]');
+  for(var i=0; i < messageBoxes.length; i++) {
+    messageBoxes[i].addEventListener('keyup', function(event) {
+      if(event.keyCode == 13){
+        window.location = '/ben/' + this.value;
+      }
+    });
+  }
+</script>
