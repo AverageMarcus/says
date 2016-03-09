@@ -33,5 +33,12 @@ module.exports = {
     'y': 100,
     'fontSize': 30,
     'rotation': 2
+  },
+  'dan' : {
+    'file': 'images/dan.png',
+    'x': 200,
+    'y': 160,
+    'fontSize': 20,
+    'rotation': -1
   }
 };
