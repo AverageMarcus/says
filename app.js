@@ -37,7 +37,7 @@ function generateImage(timestamp, person, text, done) {
         </pattern>
       </defs>
       <path d="M0 0 H 743 V 418 H 0 L 0 0" fill="url(#img1)"/>
-      <text x="${person.x}" y="${person.y}" transform="rotate(${person.rotation} ${person.x} ${person.y})" font-family="Arial" font-size="${person.fontSize}">
+      <text x="${person.x}" y="${person.y}" transform="rotate(${person.rotation} ${person.x} ${person.y})" font-family="Arial" fill="${person.colour}" font-size="${person.fontSize}">
           ${formattedText}
       </text>
     </svg>`;
