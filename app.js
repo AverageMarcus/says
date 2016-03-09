@@ -86,6 +86,24 @@ app.get('/custom', function(req, res) {
   });
 });
 
+app.get('/random/:text', function (req, res) {
+  const timestamp = Date.now();
+  let peopleNames = Object.keys(people);
+  let person = people[peopleNames[peopleNames.length * Math.random() << 0]];
+  
+  generateImage(timestamp, person, req.params.text, function(err) {
+    if(err) return err;
+
+    let returnImg = fs.readFileSync(`${timestamp}.png`);
+    res.writeHead(200, {'Content-Type': 'image/png' });
+    res.end(returnImg, 'binary');
+
+    fs.unlink(`${timestamp}.svg`);
+    fs.unlink(`${timestamp}.png`);
+    return;
+  });
+});
+
 app.get('/:person/:text', function (req, res) {
   const timestamp = Date.now();
 
