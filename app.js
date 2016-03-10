@@ -37,7 +37,7 @@ function generateImageSVG(person, url) {
       <path d="M0 0 H 743 V 418 H 0 L 0 0" fill="url(#img1)"/>
       <path d="${person.boundingBox.path}" fill="url(#img2)"/>
     </svg>`;
-    
+
   return svg;
 }
 
@@ -59,7 +59,7 @@ function generateTextSVG(person, text) {
           ${formattedText}
       </text>
     </svg>`;
-    
+
   return svg;
 }
 
@@ -113,7 +113,7 @@ app.get('/random/:text', function (req, res) {
   const timestamp = Date.now();
   let peopleNames = Object.keys(people);
   let person = people[peopleNames[peopleNames.length * Math.random() << 0]];
-  
+
   let svg = generateTextSVG(person, req.params.text);
   processSVG(timestamp, svg, function(err) {
     if(err) return err;
@@ -151,12 +151,13 @@ app.get('/image/:person/:url', function (req, res) {
 
 app.get('/:person/:text', function (req, res) {
   const timestamp = Date.now();
+  let personName = req.params.person.toLowerCase();
 
-  if(!people[req.params.person]) {
+  if(!people[personName]) {
     return res.send('Unable to find person');
   }
 
-  let svg = generateTextSVG(people[req.params.person], req.params.text);
+  let svg = generateTextSVG(people[personName], req.params.text);
   processSVG(timestamp, svg, function(err) {
     if(err) return err;
 
