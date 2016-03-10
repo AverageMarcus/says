@@ -28,6 +28,6 @@
       var messageBox = document.querySelector('textarea[data-person='+person+']');
       text = messageBox.value;
     }
-    window.location = '/' + person + '/' + encodeURIComponent(text);
+    window.location = '/' + person + '/' + encodeURIComponent(text).replace(/!$/, '%21');
   }
 </script>
