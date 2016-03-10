@@ -23,7 +23,25 @@ for(let person in people) {
   }
 }
 
-function generateImage(timestamp, person, text, done) {
+function generateImageSVG(person, url) {
+  let svg = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+    <svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="743px" height="418px" viewbox="0 0 743 418">
+      <defs>
+        <pattern id="img1" width="100%" height="100%">
+          <image xlink:href="${person.file}" x="0" y="0" width="100%" height="100%" />
+        </pattern>
+        <pattern id="img2" width="100%" height="100%">
+          <image  x="0" y="0" width="${person.boundingBox.width}" height="${person.boundingBox.height}" preserveAspectRatio="none" xlink:href="${url}" />
+        </pattern>
+      </defs>
+      <path d="M0 0 H 743 V 418 H 0 L 0 0" fill="url(#img1)"/>
+      <path d="${person.boundingBox.path}" fill="url(#img2)"/>
+    </svg>`;
+    
+  return svg;
+}
+
+function generateTextSVG(person, text) {
   let formattedText = '';
   wrap(text).split('\n').forEach((line) => {
     formattedText += `<tspan x="${person.x}" dy="25">${line}</tspan>`
@@ -41,7 +59,11 @@ function generateImage(timestamp, person, text, done) {
           ${formattedText}
       </text>
     </svg>`;
+    
+  return svg;
+}
 
+function processSVG(timestamp, svg, done) {
   fs.writeFileSync(`${timestamp}.svg`, svg);
 
   svgexport.render({
@@ -71,7 +93,8 @@ app.get('/custom', function(req, res) {
           fontSize: req.query.fontSize || 25
         };
 
-        generateImage(timestamp, customPerson, req.query.message, function(err) {
+        let svg = generateTextSVG(customPerson, req.query.message);
+        processSVG(timestamp, svg, function(err) {
           if(err) return err;
 
           let returnImg = fs.readFileSync(`${timestamp}.png`);
@@ -91,7 +114,29 @@ app.get('/random/:text', function (req, res) {
   let peopleNames = Object.keys(people);
   let person = people[peopleNames[peopleNames.length * Math.random() << 0]];
   
-  generateImage(timestamp, person, req.params.text, function(err) {
+  let svg = generateTextSVG(person, req.params.text);
+  processSVG(timestamp, svg, function(err) {
+    if(err) return err;
+
+    let returnImg = fs.readFileSync(`${timestamp}.png`);
+    res.writeHead(200, {'Content-Type': 'image/png' });
+    res.end(returnImg, 'binary');
+
+    fs.unlink(`${timestamp}.svg`);
+    fs.unlink(`${timestamp}.png`);
+    return;
+  });
+});
+
+app.get('/image/:person/:url', function (req, res) {
+  const timestamp = Date.now();
+
+  if(!people[req.params.person]) {
+    return res.send('Unable to find person');
+  }
+
+  let svg = generateImageSVG(people[req.params.person], req.params.url);
+  processSVG(timestamp, svg, function(err) {
     if(err) return err;
 
     let returnImg = fs.readFileSync(`${timestamp}.png`);
@@ -111,7 +156,8 @@ app.get('/:person/:text', function (req, res) {
     return res.send('Unable to find person');
   }
 
-  generateImage(timestamp, people[req.params.person], req.params.text, function(err) {
+  let svg = generateTextSVG(people[req.params.person], req.params.text);
+  processSVG(timestamp, svg, function(err) {
     if(err) return err;
 
     let returnImg = fs.readFileSync(`${timestamp}.png`);
@@ -129,5 +175,5 @@ app.get('*', function(req, res) {
 });
 
 app.listen(port, function () {
-  console.log(`Example app listening on port ${port}!`);
+  console.log(`Says app listening on port ${port}!`);
 });

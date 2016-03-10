@@ -5,7 +5,12 @@ module.exports = {
     'y': 80,
     'fontSize': 25,
     'rotation': 0,
-    'colour': '#979EA4'
+    'colour': '#979EA4',
+    'boundingBox': {
+      'path': 'M318 17 H 765 V 274 H 317 Z',
+      'width': 407,
+      'height': 257
+    }
   },
   'seren' : {
     'file': 'images/seren.png',
