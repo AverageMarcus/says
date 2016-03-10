@@ -17,7 +17,7 @@
   var messageBoxes = document.querySelectorAll('textarea[data-person]');
   for(var i=0; i < messageBoxes.length; i++) {
     messageBoxes[i].addEventListener('keyup', function(event) {
-      if(event.keyCode == 13 && (event.shiftKey || event.ctrlKey || event.cmdKey)){
+      if(event.keyCode == 13 && (event.ctrlKey || event.metaKey)){
         present(this.dataset.person, this.value);
       }
     });
