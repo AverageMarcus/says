@@ -106,12 +106,13 @@ app.get('/random/:text', function (req, res) {
 
 app.get('/:person/:text', function (req, res) {
   const timestamp = Date.now();
+  let personName = req.params.person.toLowerCase();
 
-  if(!people[req.params.person]) {
+  if(!people[personName]) {
     return res.send('Unable to find person');
   }
 
-  generateImage(timestamp, people[req.params.person], req.params.text, function(err) {
+  generateImage(timestamp, people[personName], req.params.text, function(err) {
     if(err) return err;
 
     let returnImg = fs.readFileSync(`${timestamp}.png`);
