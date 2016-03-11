@@ -7,18 +7,27 @@
         <h2>{{@key}}</h2>
         <img src="{{this.file}}" />
       </a>
-      <input type="text" style="display:block; width: 90%; margin: 0 auto;" data-person="{{@key}}" placeholder="Message:" />
+      <textarea type="text" style="display:block; width: 90%; margin: 0 auto;" data-person="{{@key}}" placeholder="Message: (ctrl+enter to submit)"></textarea>
+      <button type="button" data-person="{{@key}}" onclick="present('{{@key}}')">Present!</button>
     </div>
   {{/each}}
 </div>
 
 <script>
-  var messageBoxes = document.querySelectorAll('input[data-person]');
+  var messageBoxes = document.querySelectorAll('textarea[data-person]');
   for(var i=0; i < messageBoxes.length; i++) {
     messageBoxes[i].addEventListener('keyup', function(event) {
-      if(event.keyCode == 13){
-        window.location = '/' + this.dataset.person + '/' + this.value;
+      if(event.keyCode == 13 && (event.ctrlKey || event.metaKey)){
+        present(this.dataset.person, this.value);
       }
     });
+  }
+  
+  function present(person, text) {
+    if (!text) {
+      var messageBox = document.querySelector('textarea[data-person='+person+']');
+      text = messageBox.value;
+    }
+    window.location = '/' + person + '/' + encodeURIComponent(text).replace(/!$/, '%21');
   }
 </script>
