@@ -13,6 +13,9 @@ const app = express();
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 
+let Cache =require('./cache');
+let cache = new Cache({});
+
 const people = require('./people');
 
 // Base64 images on start
@@ -80,6 +83,53 @@ function processSVG(timestamp, svg, done) {
     });
 }
 
+function processRequest(req, res) {
+  const timestamp = Date.now();
+  let personName;
+  if(req.params.person) {
+    personName = req.params.person.toLowerCase();
+  } else {
+    // Random person
+    let peopleNames = Object.keys(people);
+    personName = peopleNames[peopleNames.length * Math.random() << 0];
+  }
+
+  if(!people[personName]) {
+    return res.send('Unable to find person');
+  }
+
+  let svgFunction = generateTextSVG;
+  let message = req.params.text;
+  if(req.params.url) {
+    // Image overlay
+    svgFunction = generateImageSVG;
+    message = req.params.url;
+  }
+  let key = `${personName}|${message}`;
+
+  cache.get(key)
+    .then(function(value) {
+      if(value) {
+        res.writeHead(200, {'Content-Type': 'image/png' });
+        res.end(value.buffer);
+      } else {
+        let svg = svgFunction(people[personName], message);
+        processSVG(timestamp, svg, function(err) {
+          if(err) return err;
+
+          let returnImg = fs.readFileSync(`${timestamp}.png`);
+          cache.save(key, returnImg);
+          res.writeHead(200, {'Content-Type': 'image/png' });
+          res.end(returnImg, 'binary');
+
+          fs.unlink(`${timestamp}.svg`);
+          fs.unlink(`${timestamp}.png`);
+          return;
+        });
+      }
+    });
+}
+
 app.get('/custom', function(req, res) {
   const timestamp = Date.now();
   request.get(req.query.image, function (err, response, body) {
@@ -93,83 +143,38 @@ app.get('/custom', function(req, res) {
           fontSize: req.query.fontSize || 25
         };
 
-        let svg = generateTextSVG(customPerson, req.query.message);
-        processSVG(timestamp, svg, function(err) {
-          if(err) return err;
 
-          let returnImg = fs.readFileSync(`${timestamp}.png`);
-          res.writeHead(200, {'Content-Type': 'image/png' });
-          res.end(returnImg, 'binary');
+        let key = `${req.query.image}|${req.query.message}`;
+        cache.get(key)
+          .then(function(value) {
+            if(value) {
+              res.writeHead(200, {'Content-Type': 'image/png' });
+              res.end(value.buffer);
+            } else {
+              let svg = generateTextSVG(customPerson, req.query.message);
+              processSVG(timestamp, svg, function(err) {
+                if(err) return err;
 
-          fs.unlink(`${timestamp}.svg`);
-          fs.unlink(`${timestamp}.png`);
-          return;
-        });
+                let returnImg = fs.readFileSync(`${timestamp}.png`);
+                cache.save(key, returnImg);
+                res.writeHead(200, {'Content-Type': 'image/png' });
+                res.end(returnImg, 'binary');
+
+                fs.unlink(`${timestamp}.svg`);
+                fs.unlink(`${timestamp}.png`);
+                return;
+              });
+            }
+          });
     }
   });
 });
 
-app.get('/random/:text', function (req, res) {
-  const timestamp = Date.now();
-  let peopleNames = Object.keys(people);
-  let person = people[peopleNames[peopleNames.length * Math.random() << 0]];
+app.get('/random/:text', processRequest);
 
-  let svg = generateTextSVG(person, req.params.text);
-  processSVG(timestamp, svg, function(err) {
-    if(err) return err;
+app.get('/image/:person/:url', processRequest);
 
-    let returnImg = fs.readFileSync(`${timestamp}.png`);
-    res.writeHead(200, {'Content-Type': 'image/png' });
-    res.end(returnImg, 'binary');
-
-    fs.unlink(`${timestamp}.svg`);
-    fs.unlink(`${timestamp}.png`);
-    return;
-  });
-});
-
-app.get('/image/:person/:url', function (req, res) {
-  const timestamp = Date.now();
-
-  if(!people[req.params.person]) {
-    return res.send('Unable to find person');
-  }
-
-  let svg = generateImageSVG(people[req.params.person], req.params.url);
-  processSVG(timestamp, svg, function(err) {
-    if(err) return err;
-
-    let returnImg = fs.readFileSync(`${timestamp}.png`);
-    res.writeHead(200, {'Content-Type': 'image/png' });
-    res.end(returnImg, 'binary');
-
-    fs.unlink(`${timestamp}.svg`);
-    fs.unlink(`${timestamp}.png`);
-    return;
-  });
-});
-
-app.get('/:person/:text', function (req, res) {
-  const timestamp = Date.now();
-  let personName = req.params.person.toLowerCase();
-
-  if(!people[personName]) {
-    return res.send('Unable to find person');
-  }
-
-  let svg = generateTextSVG(people[personName], req.params.text);
-  processSVG(timestamp, svg, function(err) {
-    if(err) return err;
-
-    let returnImg = fs.readFileSync(`${timestamp}.png`);
-    res.writeHead(200, {'Content-Type': 'image/png' });
-    res.end(returnImg, 'binary');
-
-    fs.unlink(`${timestamp}.svg`);
-    fs.unlink(`${timestamp}.png`);
-    return;
-  });
-});
+app.get('/:person/:text', processRequest);
 
 app.get('*', function(req, res) {
   res.render('index', {people: people});
