@@ -10,7 +10,9 @@
     "mongodb-promise": "0.0.4",
     "request": "^2.69.0",
     "svgexport": "^0.3.0",
-    "wordwrap": "^1.0.0"
+    "wordwrap": "^1.0.0",
+    "node-phantom-simple": "^2.2.4",
+    "slimerjs": "^0.906.1"
   },
   "devDependencies": {},
   "scripts": {

@@ -2,10 +2,11 @@
 const express = require('express');
 const exphbs  = require('express-handlebars');
 const fs = require('fs');
-const svgexport = require('svgexport');
 const wrap = require('wordwrap')(30);
 const Imagemin = require('imagemin');
 const request = require('request').defaults({ encoding: null });
+
+const renderSVG = require('./renderSVG');
 
 const port = process.env.PORT || 3000;
 
@@ -69,18 +70,15 @@ function generateTextSVG(person, text) {
 function processSVG(timestamp, svg, done) {
   fs.writeFileSync(`${timestamp}.svg`, svg);
 
-  svgexport.render({
-      'input' : `${timestamp}.svg`,
-      'output' : `${timestamp}.png`
-    }, (err) => {
-      new Imagemin()
-        .src(`${timestamp}.png`)
-        .dest(`./`)
-        .use(Imagemin.optipng({optimizationLevel: 1}))
-        .run((err, files) => {
-          done(err);
-        });
-    });
+  renderSVG.toPNG(timestamp).then(function() {
+    new Imagemin()
+      .src(`${timestamp}.png`)
+      .dest(`./`)
+      .use(Imagemin.optipng({optimizationLevel: 1}))
+      .run((err, files) => {
+        done(err);
+      });
+  });
 }
 
 function processRequest(req, res) {
