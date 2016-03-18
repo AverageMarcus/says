@@ -4,7 +4,7 @@
   {{#each people}}
     <div style="display:inline-block">
       <a href="/{{@key}}/Example">
-        <h2>{{@key}}</h2>
+        <h2>{{this.titleName}}</h2>
         <img src="{{this.file}}" />
       </a>
       <textarea type="text" style="display:block; width: 90%; margin: 0 auto;" data-person="{{@key}}" placeholder="Message: (ctrl+enter to submit)"></textarea>

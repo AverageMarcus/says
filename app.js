@@ -23,6 +23,7 @@ for(let person in people) {
   if(people.hasOwnProperty(person)) {
     let baseImage = fs.readFileSync(people[person].file);
     people[person].file = 'data:image;base64,' + baseImage.toString('base64');
+    people[person].titleName = person.charAt(0).toUpperCase() + person.substr(1).toLowerCase();
   }
 }
 
