@@ -21,7 +21,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       toPNG(timestamp).then(() => {
         // Need to do this to force the render to complete (no idea why)
-        setTimeout(resolve, 1);
+        setTimeout(resolve, 100);
       });
     });
   }
