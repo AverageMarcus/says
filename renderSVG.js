@@ -4,6 +4,7 @@ const driver = require('node-phantom-simple');
 function toPNG(timestamp, done) {
   return new Promise((resolve, reject) => {
     driver.create({ path: require('slimerjs').path }, function (err, browser) {
+      if(err) throw err;
       return browser.createPage(function (err, page) {
         page.open(`file://${__dirname}/view.html?${timestamp}.svg`, function (err,status) {
           page.set('viewportSize', { width:743, height:418 }, function() {
