@@ -11,8 +11,9 @@ const renderSVG = require('./renderSVG');
 const port = process.env.PORT || 3000;
 
 const app = express();
-app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+app.engine('handlebars', exphbs({defaultLayout: 'main',layoutsDir: __dirname + '/views/layouts/'}));
 app.set('view engine', 'handlebars');
+app.set('views', __dirname + '/views');
 
 let Cache =require('./cache');
 let cache = new Cache({});
@@ -22,7 +23,7 @@ const people = require('./people');
 // Base64 images on start
 for(let person in people) {
   if(people.hasOwnProperty(person)) {
-    let baseImage = fs.readFileSync(people[person].file);
+    let baseImage = fs.readFileSync(__dirname + '/' + people[person].file);
     people[person].file = 'data:image;base64,' + baseImage.toString('base64');
   }
 }
