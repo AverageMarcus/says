@@ -4,6 +4,7 @@ let collection;
 
 let Cache = function(options) {
   let url = options.url || process.env.MONGO_URL || 'mongodb://127.0.0.1:27017/cache';
+  console.log(`MongoDB URL: ${url}`);
   mp.MongoClient
     .connect(url)
     .then(function(db){
