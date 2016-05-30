@@ -177,6 +177,14 @@ app.get('/image/:person/:url', processRequest);
 
 app.get('/:person/:text', processRequest);
 
+app.get('/people', function(req, res) {
+  let result = [];
+  for(let person in people) {
+    result.push(person);
+  }
+  res.send(result);
+})
+
 app.get('*', function(req, res) {
   res.render('index', {people: people});
 });
