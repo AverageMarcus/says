@@ -111,8 +111,9 @@ function processRequest(req, res) {
 
   cache.get(key)
     .then(function(value) {
+      res.writeHead(200, {'Content-Type': 'image/png', 'Access-Control-Allow-Origin': '*' });
+
       if(value) {
-        res.writeHead(200, {'Content-Type': 'image/png' });
         res.end(value.buffer);
       } else {
         let svg = svgFunction(people[personName], message);
@@ -121,16 +122,16 @@ function processRequest(req, res) {
 
           let returnImg = fs.readFileSync(`${timestamp}.png`);
           cache.save(key, returnImg);
-          res.writeHead(200, {'Content-Type': 'image/png', 'Access-Control-Allow-Origin': '*' });
+
           res.end(returnImg, 'binary');
 
-          console.log('Request processed');
 
           fs.unlink(`${timestamp}.svg`);
           fs.unlink(`${timestamp}.png`);
           return;
         });
       }
+      console.log('Request processed');
     });
 }
 
