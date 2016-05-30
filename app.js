@@ -107,6 +107,7 @@ function processRequest(req, res) {
     message = req.params.url;
   }
   let key = `${personName}|${message}`;
+  console.log(`Requested: ${key}`);
 
   cache.get(key)
     .then(function(value) {
