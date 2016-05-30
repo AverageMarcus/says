@@ -124,6 +124,8 @@ function processRequest(req, res) {
           res.writeHead(200, {'Content-Type': 'image/png' });
           res.end(returnImg, 'binary');
 
+          console.log('Request processed');
+
           fs.unlink(`${timestamp}.svg`);
           fs.unlink(`${timestamp}.png`);
           return;
