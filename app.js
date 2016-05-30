@@ -121,7 +121,7 @@ function processRequest(req, res) {
 
           let returnImg = fs.readFileSync(`${timestamp}.png`);
           cache.save(key, returnImg);
-          res.writeHead(200, {'Content-Type': 'image/png' });
+          res.writeHead(200, {'Content-Type': 'image/png', 'Access-Control-Allow-Origin': '*' });
           res.end(returnImg, 'binary');
 
           console.log('Request processed');
