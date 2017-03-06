@@ -85,8 +85,8 @@ module.exports = {
     'rotation': 2,
     'colour': '#827161',
     'boundingBox': {
-      'path': 'M250 95 H 445 V 195 H 115 Z',
-      'width': 155,
+      'path': 'M250 100 H 465 V 195 H 250 Z',
+      'width': 185,
       'height': 115
     }
   }
