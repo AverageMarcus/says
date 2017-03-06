@@ -76,5 +76,18 @@ module.exports = {
       'width': 195,
       'height': 170
     }
+  },
+  'max' : {
+    'file': 'images/max.jpg',
+    'x': 250,
+    'y': 90,
+    'fontSize': 20,
+    'rotation': 2,
+    'colour': '#827161',
+    'boundingBox': {
+      'path': 'M250 95 H 445 V 195 H 115 Z',
+      'width': 155,
+      'height': 115
+    }
   }
 };
