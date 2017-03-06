@@ -78,7 +78,7 @@ module.exports = {
     }
   },
   'max' : {
-    'file': 'images/max.jpg',
+    'file': 'images/max.png',
     'x': 250,
     'y': 90,
     'fontSize': 20,
