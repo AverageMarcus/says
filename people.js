@@ -25,6 +25,19 @@ module.exports = {
       'height': 327
     }
   },
+  'serenception' : {
+    'file': 'images/serenception.png',
+    'x': 490,
+    'y': 120,
+    'fontSize': 18,
+    'rotation': 1,
+    'colour': '#131415',
+    'boundingBox': {
+      'path': 'M478 107 H 665 V 500 H 477 Z',
+      'width': 180,
+      'height': 127
+    }
+  },
   'ryan' : {
     'file': 'images/ryan.png',
     'x': 20,

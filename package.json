@@ -12,9 +12,12 @@
     "svgexport": "^0.3.0",
     "wordwrap": "^1.0.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "nodemon": "^1.15.1"
+  },
   "scripts": {
     "start": "node app.js",
+    "watch": "./node_modules/.bin/nodemon --exec \"npm run start\" -e js,html,css,md,scss",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "engines": {
