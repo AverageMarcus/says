@@ -59,9 +59,20 @@ function generateTextSVG(person, text) {
         </pattern>
       </defs>
       <path d="M0 0 H 743 V 418 H 0 L 0 0" fill="url(#img1)"/>
-      <text x="${person.x}" y="${person.y}" transform="rotate(${person.rotation} ${person.x} ${person.y})" font-family="sans-serif" fill="${person.colour}" font-size="${person.fontSize}">
-          ${formattedText}
-      </text>
+
+      <switch>
+        <foreignObject x="${person.x}" y="${person.y}" width="${person.boundingBox.width}" height="${person.boundingBox.height}" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+          <p xmlns="http://www.w3.org/1999/xhtml"
+              style="transform:rotate(${person.rotation} ${person.x} ${person.y}); font-family:sans-serif; color:${person.colour}; font-size:${person.fontSize};">
+            ${text}
+          </p>
+        </foreignObject>
+        <text x="${person.x}" y="${person.y}" transform="rotate(${person.rotation} ${person.x} ${person.y})" font-family="sans-serif" fill="${person.colour}" font-size="${person.fontSize}">
+            ${formattedText}
+        </text>
+      </switch>
+
+
     </svg>`;
 
   return svg;
